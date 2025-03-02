@@ -119,7 +119,7 @@
                             <td>{{$item->room_no}}</td>
 
                             <td>
-                                <a href="" class="badge badge-primary">view</a>
+                                
                                 <a href="{{route('time_table.edit',$item->id)}}" class="badge badge-warning">edit</a>
                                 <a href="{{route('time_table.delete',$item->id)}}" onclick="return confirm('are you sure want to delete?')"
                                      class="badge badge-danger">delete</a>

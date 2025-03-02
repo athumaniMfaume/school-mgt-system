@@ -102,7 +102,7 @@
                             <td>{{$item->classes->name}}</td>
                             <td>{{$item->subject->name}}</td>
                             <td>
-                                <a href="" class="badge badge-primary">view</a>
+                                
                                 <a href="{{route('teacher_class.edit',$item->id)}}" class="badge badge-warning">edit</a>
                                 <a href="{{route('teacher_class.delete',$item->id)}}" onclick="return confirm('are you sure want to delete?')"
                                      class="badge badge-danger">delete</a>

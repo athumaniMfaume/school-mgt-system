@@ -144,8 +144,7 @@
                             <td>{{$item->march}}</td>
 
                             <td>
-                                <a href="" class="badge badge-primary">view</a>
-                                <a href="{{route('fee_structure.edit',$item->id)}}" class="badge badge-warning">edit</a>
+                                                               <a href="{{route('fee_structure.edit',$item->id)}}" class="badge badge-warning">edit</a>
                                 <a href="{{route('fee_structure.delete',$item->id)}}" onclick="return confirm('are you sure want to delete?')"
                                      class="badge badge-danger">delete</a>
                             </td>

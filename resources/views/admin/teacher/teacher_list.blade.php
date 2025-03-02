@@ -94,7 +94,7 @@
                             <td>{{$item->dob}}</td>
 
                             <td>
-                                <a href="" class="badge badge-primary">view</a>
+                              
                                 <a href="{{route('teacher.edit',$item->id)}}" class="badge badge-warning">edit</a>
                                 <a href="{{route('teacher.delete',$item->id)}}" onclick="return confirm('are you sure want to delete?')"
                                      class="badge badge-danger">delete</a>
