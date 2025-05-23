@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\StudentExamGrade;
+
 
 class UserController extends Controller
 {
@@ -17,148 +19,84 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
 
-     public function dashboard()
-     {
-         $data = Announcement::where('type','student')->latest()->limit(1)->get();
-         $class_id = Auth::user()->classes->id;
-         $subject = AssignTeacherToClass::with('classes','user')->where('class_id', $class_id)->
-         with('subject')->count();
+public function dashboard()
+{
+    // latest student-specific announcement
+    $data = Announcement::where('type', 'student')
+                        ->latest()
+                        ->limit(1)
+                        ->get();
 
-         return view('student.dashboard', compact('data','subject'));
-     }
+    // grab the currently-logged-in student via the 'student' guard
+    $student = auth('student')->user();
 
-     public function mySubject()
-     {
-         $class_id = Auth::user()->classes->id;
-         $data = AssignTeacherToClass::with('classes','user')->where('class_id', $class_id)->
-         with('subject')->get();
-        //  dd($data);
-         return view('student.my_subject', compact('data'));
-     }
+    // use optional() so we don't call ->id on null
+    $classId = optional($student->classes)->id;
 
-     public function examResult()
-     {
-         $user_id = Auth::user()->id;
-         $data = ExamResult::with('exam','user','subject')->where('user_id', $user_id)->get();
-         return view('student.exam_result', compact('data'));
-     }
+    // if they really have no class, bail out
+    if (! $classId) {
+        return redirect()->back()
+                         ->with('error', 'You are not assigned to any class yet.');
+    }
+
+    // count subjects assigned to this class
+    $subjectCount = AssignTeacherToClass::where('class_id', $classId)
+                        ->with(['classes', 'user', 'subject'])
+                        ->count();
+
+    return view('student.dashboard', [
+        'data'    => $data,
+        'subject' => $subjectCount,
+    ]);
+}
+
+
+
+    public function mySubject()
+{
+    $student = auth('student')->user();
+
+    if (!$student->classes) {
+        return redirect()->back()->with('error', 'You are not assigned to any class.');
+    }
+
+    $class_id = $student->classes->id;
+
+    $data = AssignTeacherToClass::with('classes', 'user', 'subject')
+        ->where('class_id', $class_id)
+        ->get();
+
+    return view('student.my_subject', compact('data'));
+}
+
+
+ public function examResult()
+{
+    $user_id = auth('student')->user()->id;
+
+    // Fetch all individual subject results for the student
+    $data = ExamResult::with('exam', 'user', 'subject')
+        ->where('user_id', $user_id)
+        ->get();
+
+    // Fetch the student's average scores and grades per exam
+    $averages = StudentExamGrade::with('exam')
+        ->where('user_id', $user_id)
+        ->get();
+
+    return view('student.exam_result', compact('data', 'averages'));
+}
+
 
      public function myTimeTable()
      {
-         $class_id = Auth::user()->classes->id;
+         $class_id = auth('student')->user()->classes->id;
          $data = TimeTable::with('classes','subject')->where('class_id', $class_id)->get();
         //  dd($data);
          return view('student.my_TimeTable', compact('data'));
      }
 
-    public function index()
-    {
-        return view('student.login');
-    }
-
-    public function logout()
-     {
-        Auth::logout();
-
-         return redirect()->route('student.login')->with('success','logout successfully');
-
-     }
-
-     public function changePassword()
-     {
-         return view('student.change_password');
-     }
-
-     public function updatePassword(Request $request)
-     {
-        $request->validate([
-            'old_password' => 'required',
-            'new_password' => 'required',
-            'password_confirmation' => 'required|same:new_password',
-        ]);
-
-        $old_password = $request->old_password;
-        $new_password = $request->new_password;
-        $user = User::find(Auth::user()->id);
-
-        if (Hash::check($old_password, $user->password)) {
-            $user->password = $request->new_password;
-            $user->update();
-            return redirect()->back()->with('success', 'Password update successfully!');
-        }else {
-            return redirect()->back()->with('error', 'Old password doesnt match!');
-        }
-     }
-
-    public function authenticate(Request $req){
-        $req->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-
-        if (Auth::attempt(['email' => $req->email, 'password' => $req->password])) {
-
-            if (Auth::user()->role != 'student') {
-                    Auth::logout();
-                    return redirect()->route('student.login')->with('error','unauthorized user. Access denied');
-                }
-                return redirect()->route('student.dashboard');
-            }else {
-                return redirect()->route('student.login')->with('error','Email or Password is wrong!');
-            }
-    }
 
 
 
-
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcademicYearController;
+use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AssignSubjectToClassController;
@@ -19,26 +20,37 @@ use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('admin.login');
+    return view('login');
 });
 
+Route::get('/login',  [AuthenticateController::class,'login'])->name('login');
+Route::post('/login/post',  [AuthenticateController::class,'login_post'])->name('login.post');
+Route::get('logout', [AuthenticateController::class,'logout'])->name('logout');
 
+Route::get('/change-password',  [AuthenticateController::class,'changePassword'])->name('change.password');
+Route::post('/change-password/post',  [AuthenticateController::class,'updatePassword'])->name('changepassword.post');
+
+Route::get('/forgot-password', [AuthenticateController::class, 'forgotPassword'])->name('forgot.password');
+Route::post('/forgot-password/post', [AuthenticateController::class, 'forgotPasswordPost'])->name('forgot.post');
+
+Route::get('/reset-password', [AuthenticateController::class, 'recoverPassword'])->name('recover.password');
+
+
+Route::post('/reset-password', [AuthenticateController::class, 'recoverPasswordPost'])->name('password.reset');
+
+
+
+ Route::get('profile', [AuthenticateController::class,'profile'])->name('profile');
+  Route::post('profile/edit', [AuthenticateController::class,'editProfile'])->name('profile.edit');
 
 
 
 
 Route::group(['prefix'=>'student'], function(){
-    Route::group(['middleware'=>'guest'], function(){
-        Route::get('login', [UserController::class,'index'])->name('student.login');
-        Route::post('authenticate', [UserController::class,'authenticate'])->name('student.authenticate');
 
-    });
 
-    Route::group(['middleware'=>'auth'], function(){
+    Route::group(['middleware'=>'student.auth'], function(){
         Route::get('dashboard', [UserController::class,'dashboard'])->name('student.dashboard');
-        Route::get('logout', [UserController::class,'logout'])->name('student.logout');
-        Route::get('change-password', [UserController::class,'changePassword'])->name('student.changePassword');
-        Route::post('update-password', [UserController::class,'updatePassword'])->name('student.updatePassword');
         Route::get('my-subject', [UserController::class,'mySubject'])->name('student.mySubject');
         Route::get('my-TimeTable', [UserController::class,'myTimeTable'])->name('student.myTimeTable');
         Route::get('exam_result', [UserController::class,'examResult'])->name('student.exam_result');
@@ -48,25 +60,11 @@ Route::group(['prefix'=>'student'], function(){
 });
 
 Route::group(['prefix'=>'teacher'], function(){
-    Route::group(['middleware'=>'teacher.guest'], function(){
-        // Login
-        Route::get('login', [TeacherController::class,'login'])->name('teacher.login');
-        Route::post('authenticate', [TeacherController::class,'authenticate'])->name('teacher.authenticate');
 
-        // Registration
-
-        // Forgot Password
-
-        // Land Page
-
-    });
 
     Route::group(['middleware'=>'teacher.auth'], function(){
         // Dashboard
         Route::get('dashboard', [TeacherController::class,'dashboard'])->name('teacher.dashboard');
-        Route::get('logout', [TeacherController::class,'logout'])->name('teacher.logout');
-        Route::get('change-password', [TeacherController::class,'changePassword'])->name('teacher.changePassword');
-        Route::post('update-password', [TeacherController::class,'updatePassword'])->name('teacher.updatePassword');
         Route::get('my-subject', [TeacherController::class,'mySubject'])->name('teacher.mySubject');
         Route::get('my-TimeTable', [TeacherController::class,'myTimeTable'])->name('teacher.myTimeTable');
 
@@ -79,20 +77,14 @@ Route::group(['prefix'=>'teacher'], function(){
 });
 
 Route::group(['prefix'=>'admin'], function(){
-    Route::group(['middleware'=>'admin.guest'], function(){
-        Route::get('login', [AdminController::class,'index'])->name('admin.login');
-        Route::get('register', [AdminController::class,'register'])->name('admin.register');
-        Route::post('login', [AdminController::class,'authenticate'])->name('admin.authenticate');
-    });
+ 
 
     Route::group(['middleware'=>'admin.auth'], function(){
-        Route::get('logout', [AdminController::class,'logout'])->name('admin.logout');
+
         Route::get('dashboard', [AdminController::class,'dashboard'])->name('admin.dashboard');
+        
         Route::get('form', [AdminController::class,'form'])->name('admin.form');
         Route::get('table', [AdminController::class,'table'])->name('admin.table');
-        Route::get('change-password', [AdminController::class,'changePassword'])->name('admin.changePassword');
-        Route::post('update-password', [AdminController::class,'updatePassword'])->name('admin.updatePassword');
-
         // Academic Year management
         Route::get('academic-year/create', [AcademicYearController::class,'index'])->name('academic-year.create');
         Route::post('academic-year/store', [AcademicYearController::class,'store'])->name('academic-year.store');
@@ -195,7 +187,9 @@ Route::group(['prefix'=>'admin'], function(){
          Route::post('time_table/store', [TimeTableController::class,'store'])->name('time_table.store');
          Route::get('time_table/read', [TimeTableController::class,'read'])->name('time_table.read');
          Route::get('time_table/delete/{id}', [TimeTableController::class,'delete'])->name('time_table.delete');
-         Route::get('time_table/edit/{id}', [TimeTableController::class,'edit'])->name('time_table.edit');
+         // Change edit route to accept class_id instead of id
+Route::get('time_table/edit/{id}', [TimeTableController::class,'edit'])->name('time_table.edit');
+;
          Route::post('time_table/update', [TimeTableController::class,'update'])->name('time_table.update');
 
 

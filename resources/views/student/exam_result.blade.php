@@ -46,35 +46,51 @@ Student Exam Results | Table
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>SN</th>
-                    <th>Exam</th>
-                    <th>Student</th>
-                    <th>Subject</th>
-                    <th>Score</th>
-                    <th>Grade</th>
+               
+<h3>Individual Subject Results</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Exam</th>
+            <th>Subject</th>
+            <th>Score</th>
+            <th>Grade</th> <!-- Optional if you want per subject grade -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($data as $result)
+            <tr>
+                <td>{{ $result->exam->name }}</td>
+                <td>{{ $result->subject->name }}</td>
+                <td>{{ $result->score }}</td>
+                <td>{{ \App\Http\Controllers\ExamResultController::calculateGrade($result->score) }}</td> <!-- if calculateGrade is static or move it to helper -->
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 
-                  </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($data as $item)
-                        <tr>
-                            <td>{{$item->id}}</td>
-                            <td>{{$item->exam->name}}</td>
-                            <td>{{$item->user->name}}</td>
-                            <td>{{$item->subject->name}}</td>
-                            <td>{{$item->score}}</td>
-                            <td>{{$item->grade}}</td>
+<h3>Average Scores & Grades per Exam</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Exam</th>
+            <th>Average Score</th>
+            <th>Final Grade</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($averages as $avg)
+            <tr>
+                <td>{{ $avg->exam->name }}</td>
+                <td>{{ number_format($avg->average_score, 2) }}</td>
+                <td>{{ $avg->grade }}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 
-                        </tr>
-                    @endforeach
 
 
-                  </tbody>
-
-                </table>
               </div>
               <!-- /.card-body -->
             </div>

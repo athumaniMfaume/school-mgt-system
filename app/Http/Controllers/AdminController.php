@@ -89,4 +89,16 @@ class AdminController extends Controller
     public function table(){
         return view('admin.table');
     }
+
+        public function profile(){
+                if (Auth::guard('admin')->check()) {
+                 $id = Auth::guard('admin')->user()->id;
+                 $user = User::where('id', $id)->first();
+                 return view('admin.profile',compact('user'));
+        
+    } 
+        
+    }
+
+
 }

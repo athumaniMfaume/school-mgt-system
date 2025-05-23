@@ -69,7 +69,7 @@
                                 @foreach ($subject as $item)
                                     <option value="{{ $item->id }}"
                                         @if ($data->subject_id == $item->id) selected @endif>
-                                        {{ $item->name }}
+                                        {{ $item->name }} | {{$item->type}}
                                     </option>
                                 @endforeach
                             </select>

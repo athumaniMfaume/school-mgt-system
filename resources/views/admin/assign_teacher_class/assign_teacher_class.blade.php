@@ -100,7 +100,7 @@
 
                     <div class="form-check">
                         <input type="checkbox" id="subject-{{$item->id}}" name="subject_id[]" value="{{$item->id}}">
-                        <label for="subject-{{$item->id}}">{{$item->name}}</label>
+                        <label for="subject-{{$item->id}}">{{$item->name}} | {{$item->type}}</label>
 
                     </div>
 

@@ -119,22 +119,7 @@
                         @enderror
                     </div>
 
-                    <div class="form-group col-md-4">
-                        <label for="exampleInputEmail1">Grade</label>
-                        <select class="form-control" name="grade" id="">
-                          <option value="" disabled selected>Select Grade</option>
-                          <option value="A">A</option>
-                          <option value="B">B</option>
-                          <option value="C">C</option>
-                          <option value="D">D</option>
-                          <option value="F">F</option>
-                        </select>
-                        @error('grade')
-                          <p class="text-danger">
-                            {{$message}}
-                          </p>
-                      @enderror
-                      </div>
+                    
 
 
 

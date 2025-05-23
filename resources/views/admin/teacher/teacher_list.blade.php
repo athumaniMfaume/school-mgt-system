@@ -65,47 +65,47 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>SN</th>
+<table id="example1" class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>SN</th>
+      <th>Image</th> <!-- New column for image -->
+      <th>Name</th>
+      <th>Class</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>DOB</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach ($data as $item)
+      <tr>
+        <td>{{ $item->id }}</td>
 
-                    <th>Name</th>
-                    <th>Class</th>
-                    <th>Email</th>
-                    <th>Phone</th>
+        <td>
+          @if ($item->image && Storage::disk('public')->exists($item->image))
+            <img src="{{ asset('storage/' . $item->image) }}" alt="Teacher Image" width="50" height="50" style="object-fit: cover; border-radius: 4px;">
+          @else
+            N/A
+          @endif
+        </td>
 
-                    <th>DOB</th>
+        <td>{{ $item->name }}</td>
+        <td>{{ $item->classes ? $item->classes->name : 'N/A' }}</td>
+        <td>{{ $item->email }}</td>
+        <td>{{ $item->phone }}</td>
+        <td>{{ $item->dob }}</td>
 
+        <td>
+          <a href="{{ route('teacher.edit', $item->id) }}" class="badge badge-warning">edit</a>
+          <a href="{{ route('teacher.delete', $item->id) }}" onclick="return confirm('Are you sure want to delete?')" class="badge badge-danger">delete</a>
+        </td>
+      </tr>
+    @endforeach
+  </tbody>
+</table>
 
-                    <th>Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($data as $item)
-                        <tr>
-                            <td>{{$item->id}}</td>
-
-                            <td>{{$item->name}}</td>
-                            <td>{{ $item->classes ? $item->classes->name : 'N/A' }}</td>
-                            <td>{{$item->email}}</td>
-                            <td>{{$item->phone}}</td>
-
-                            <td>{{$item->dob}}</td>
-
-                            <td>
-                              
-                                <a href="{{route('teacher.edit',$item->id)}}" class="badge badge-warning">edit</a>
-                                <a href="{{route('teacher.delete',$item->id)}}" onclick="return confirm('are you sure want to delete?')"
-                                     class="badge badge-danger">delete</a>
-                            </td>
-                        </tr>
-                    @endforeach
-
-
-                  </tbody>
-
-                </table>
               </div>
               <!-- /.card-body -->
             </div>
@@ -140,17 +140,52 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      responsive: true,
+      lengthChange: false,
+      autoWidth: false,
+      buttons: [
+        {
+          extend: 'copy',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'csv',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'excel',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'pdf',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'print',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        'colvis'
+      ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
     $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
+      paging: true,
+      lengthChange: false,
+      searching: false,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
     });
   });
 </script>

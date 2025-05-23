@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SubjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Show the subject management landing page.
      */
     public function index()
     {
@@ -16,94 +17,94 @@ class SubjectController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a grouped list of subjects.
      */
     public function read(Request $request)
     {
-    $query = Subject::query();
+        $query = Subject::query();
 
-    // Apply filters based on request
-    if ($request->filled('name')) {
-        $query->where('name', $request->name);
+        if ($request->filled('name')) {
+            $query->where('name', $request->name);
+        }
+
+        // Fetch and group by name so each subject appears once
+        $subjects = $query->get()
+                          ->groupBy('name');
+
+        return view('admin.subject.subject_list', compact('subjects'));
     }
 
-
-    $data = $query->get();
-    $subject = Subject::all();
-
-
-    return view('admin.subject.subject_list', compact('data', 'subject'));
-}
-
     /**
-     * Store a newly created resource in storage.
+     * Store a new subject (name + type).
      */
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'type' => 'required',
+            'name' => 'required|string|max:255',
+            'type' => [
+                'required',
+                'string',
+                Rule::unique('subjects')->where(function($q) use ($request) {
+                    return $q->where('name', $request->name);
+                })
+            ],
+        ], [
+            'type.unique' => 'This subject and type combination already exists.',
         ]);
 
-        $data = new Subject();
-        $data->name = $request->name;
-        $data->type = $request->type;
-        $data->save();
+        Subject::create([
+            'name' => $request->name,
+            'type' => $request->type,
+        ]);
 
-        return redirect()->back()->with('success', 'Subject Added Successfully');
-
-
+        return redirect()->back()->with('success', 'Subject added successfully.');
     }
 
     /**
-     * Display the specified resource.
+     * Show the form for editing a subject entry.
      */
-    public function show(Subject $subject)
+    public function edit($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Request $request, $id)
-    {
-
-        $data = Subject::find($id);
+        $data = Subject::findOrFail($id);
         return view('admin.subject.subject_edit', compact('data'));
-
-
-
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update a subject entry.
      */
     public function update(Request $request)
     {
-
-        $data = Subject::find($request->id);
+        $subject = Subject::findOrFail($request->id);
 
         $request->validate([
-            'name' => 'required',
-            'type' => 'required',
+            'name' => 'required|string|max:255',
+            'type' => [
+                'required',
+                'string',
+                Rule::unique('subjects')->where(function($q) use ($request) {
+                    return $q->where('name', $request->name);
+                })->ignore($subject->id),
+            ],
+        ], [
+            'type.unique' => 'This subject and type combination already exists.',
         ]);
 
-        $data->name = $request->name;
-        $data->type = $request->type;
+        $subject->update([
+            'name' => $request->name,
+            'type' => $request->type,
+        ]);
 
-        $data->save();
-        return redirect()->route('subject.read')->with('success', 'Subject updated successfully!');
-
+        return redirect()->route('subject.read')->with('success', 'Subject updated successfully.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a subject entry.
      */
     public function delete($id)
     {
-        $data = Subject::find($id);
-        $data->delete();
-        return redirect()->route('subject.read')->with('success', 'Subject deleted successfully!');
+        $subject = Subject::findOrFail($id);
+        $subject->delete();
+
+        return redirect()->route('subject.read')->with('success', 'Subject deleted successfully.');
     }
 }

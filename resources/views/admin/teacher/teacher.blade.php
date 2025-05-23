@@ -56,75 +56,81 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{ route('teacher.store') }}" method="post">
-                @csrf
-                <div class="card-body">
-                    <div class="row">
+            <form action="{{ route('teacher.store') }}" method="post" enctype="multipart/form-data">
+    @csrf
+    <div class="card-body">
+        <div class="row">
 
+            <div class="form-group col-md-4">
+                <label for="class">Class</label>
+                <select class="form-control" name="class_id" id="class">
+                    <option value="">Select class</option>
+                    @foreach ($class as $item)
+                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    @endforeach
+                </select>
+                @error('class_id')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                      <div class="form-group col-md-4">
-                        <label for="class">Class</label>
-                        <select class="form-control" name="class_id" id="class">
-                            <option value="">Select class</option>
-                            @foreach ($class as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('class_id')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
+            <div class="form-group col-md-4">
+                <label for="name">Teacher's Name</label>
+                <input type="text" name="name" class="form-control" id="name" placeholder="Enter Name">
+                @error('name')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="name">Teacher's Name</label>
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Enter Name">
-                            @error('name')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <div class="form-group col-md-4">
+                <label for="email">Teacher's Email</label>
+                <input type="email" name="email" class="form-control" id="email" placeholder="Enter Email">
+                @error('email')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
+            <div class="form-group col-md-4">
+                <label for="dob">Birthday</label>
+                <input type="date" name="dob" class="form-control" id="dob">
+                @error('dob')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
+            <div class="form-group col-md-4">
+                <label for="phone">Teacher's Phone</label>
+                <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter Phone">
+                @error('phone')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="email">Teacher's Email</label>
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Enter Email">
-                            @error('email')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <div class="form-group col-md-4">
+                <label for="password">Password</label>
+                <input type="password" name="password" class="form-control" id="password" placeholder="Enter Password">
+                @error('password')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="dob">Birthday</label>
-                            <input type="date" name="dob" class="form-control" id="dob">
-                            @error('dob')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <!-- New Image Upload Field -->
+            <div class="form-group col-md-4">
+                <label for="image">Teacher's Image</label>
+                <input type="file" name="image" class="form-control" id="image" accept="image/*">
+                @error('image')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
+        </div>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
 
-
-                        <div class="form-group col-md-4">
-                            <label for="phone">Teacher's Phone</label>
-                            <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter Phone">
-                            @error('phone')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Enter Password">
-                            @error('password')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
 
             </div>
             <!-- /.card -->

@@ -1,6 +1,6 @@
-@extends('teacher.layout')
+@extends('admin.layout')
 @section('title')
-  Teacher Change Password
+  Time Table | create
 @endsection
 @section('content')
 
@@ -13,12 +13,14 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Teacher Change Password</h1>
+            <h1>Time Table</h1>
+            <a href="{{route('time_table.read')}}" class="btn btn-primary mt-2"> View TimeTable</a>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{route('teacher.dashboard')}}">Home</a></li>
-              <li class="breadcrumb-item active">Teacher Change Password</li>
+              <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Home</a></li>
+              <li class="breadcrumb-item active">Time Table</li>
+
             </ol>
           </div>
         </div>
@@ -34,58 +36,107 @@
             <!-- general form elements -->
             <div class="card card-primary">
                 @if (Session::has('success'))
-                <div class="alert alert-success">
-                    {{Session::get('success')}}
-                </div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ Session::get('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-                @endif
-
-                @if (Session::has('error'))
-                <div class="alert alert-danger">
-                    {{Session::get('error')}}
-                </div>
-
-                @endif
+@if (Session::has('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ Session::get('error') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
               <div class="card-header">
-                <h3 class="card-title">Update Password</h3>
+                <h3 class="card-title">Time Table</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{ route('teacher.updatePassword') }}" method="post">
-                @csrf
-                <div class="card-body">
-                    <div class="row">
-                    <div class="form-group col-md-4">
-                        <label for="academicYear">Old Password</label>
-                        <input type="password" name="old_password" class="form-control" id="academicYear" placeholder="Enter Old Password">
-                        @error('old_password')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
+       <form  action="{{ route('time_table.update') }}" method="POST">
+    @csrf
+    <div class="card-body">
+    <input type="hidden" name="id" value="{{ $data->id }}">
 
-                    <div class="form-group col-md-4">
-                        <label for="academicYear">New Password</label>
-                        <input type="password" name="new_password" class="form-control" id="academicYear" placeholder="Enter New Password">
-                        @error('new_password')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
+    <div class="form-group">
+        <label for="class_id">Class</label>
+        <select class="form-control" name="class_id" id="class_id" required>
+            <option value="" disabled>Select Class</option>
+            @foreach ($classes as $class)
+                <option value="{{ $class->id }}" {{ $data->class_id == $class->id ? 'selected' : '' }}>
+                    {{ $class->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('class_id')
+            <p class="text-danger">{{ $message }}</p>
+        @enderror
+    </div>
 
-                    <div class="form-group col-md-4">
-                        <label for="academicYear">Confirm New Password</label>
-                        <input type="password" name="password_confirmation" class="form-control" id="academicYear" placeholder="Enter Confirm Password">
-                        @error('password_confirmation')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                </div>
-                <!-- /.card-body -->
+    <div class="form-group">
+        <label for="subject_id">Subject</label>
+        <select class="form-control" name="subject_id" id="subject_id" required>
+            <option value="" disabled>Select Subject</option>
+            @foreach ($subject as $item)
+                <option value="{{ $item->id }}" {{ $data->subject_id == $item->id ? 'selected' : '' }}>
+                    {{ $item->name }} | {{ $item->type }}
+                </option>
+            @endforeach
+        </select>
+        @error('subject_id')
+            <p class="text-danger">{{ $message }}</p>
+        @enderror
+    </div>
 
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Change Password</button>
-                </div>
-            </form>
+    <div class="form-group">
+        <label for="day_id">Day</label>
+        <select class="form-control" name="day_id" id="day_id" required>
+            <option value="" disabled>Select Day</option>
+            @foreach ($day as $item)
+                <option value="{{ $item->id }}" {{ $data->day_id == $item->id ? 'selected' : '' }}>
+                    {{ $item->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('day_id')
+            <p class="text-danger">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="form-group">
+        <label for="start_time">Start Time</label>
+        <input type="time" name="start_time" id="start_time" class="form-control" value="{{ $data->start_time }}" required>
+        @error('start_time')
+            <p class="text-danger">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="form-group">
+        <label for="end_time">End Time</label>
+        <input type="time" name="end_time" id="end_time" class="form-control" value="{{ $data->end_time }}" required>
+        @error('end_time')
+            <p class="text-danger">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="form-group">
+        <label for="room_no">Room Number</label>
+        <input type="text" name="room_no" id="room_no" class="form-control" value="{{ $data->room_no }}" required>
+        @error('room_no')
+            <p class="text-danger">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+</div>
+</form>
+
+
+
 
             </div>
             <!-- /.card -->

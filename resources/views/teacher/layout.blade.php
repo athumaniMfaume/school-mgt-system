@@ -52,6 +52,10 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="{{route('teacher.myTimeTable')}}" class="nav-link">TimeTable</a>
       </li>
+
+                  <li class="nav-item d-none d-sm-inline-block">
+        <a href="{{route('profile')}}" class="nav-link">Profile</a>
+      </li>
     </ul>
 
     <!-- Right navbar links -->
@@ -60,7 +64,7 @@
       
 
       <li class="nav-item">
-        <a class="nav-link"  href="{{route('teacher.logout')}}" >
+        <a class="nav-link"  href="{{route('logout')}}" >
           logout
         </a>
       </li>
@@ -160,7 +164,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="{{route('teacher.changePassword')}}" class="nav-link">
+            <a href="{{route('change.password')}}" class="nav-link">
               <i class="nav-icon fas fa-key"></i>
               <p>
                 Change Password
@@ -170,7 +174,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="{{route('teacher.logout')}}" class="nav-link">
+            <a href="{{route('logout')}}" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt"></i>
               <p>
                 Logout

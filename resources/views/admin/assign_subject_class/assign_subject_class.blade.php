@@ -67,7 +67,7 @@
                         <select class="form-control" name="class_id" id="">
                           <option value="" disabled selected>Select Class</option>
                           @foreach ($class as $item)
-                          <option value="{{$item->id}}">{{$item->name}}</option>
+                          <option value="{{$item->id}}">{{$item->name}} </option>
 
                           @endforeach
                         </select>
@@ -84,7 +84,7 @@
 
                     <div class="form-check">
                         <input type="checkbox" id="subject-{{$item->id}}" name="subject_id[]" value="{{$item->id}}">
-                        <label for="subject-{{$item->id}}">{{$item->name}}</label>
+                        <label for="subject-{{$item->id}}">{{$item->name}} | {{$item->type}}</label>
 
                     </div>
 

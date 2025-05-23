@@ -57,10 +57,10 @@
 </div>
 @endif
               <div class="card-header">
-                <h3 class="card-title">Exam Data</h3>
+                <h3 class="card-title"></h3>
                 <form action="{{ route('exam.read') }}" method="GET">
                     <div class="form-group col-md-4">
-                        <label for="exampleInputEmail1">Class</label>
+                        <label for="exampleInputEmail1">Exam Class Search</label>
                         <select class="form-control" name="class_id" id="">
                           <option value="" disabled selected>Select Class</option>
                           @foreach ($class as $item)
@@ -150,20 +150,56 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      responsive: true,
+      lengthChange: false,
+      autoWidth: false,
+      buttons: [
+        {
+          extend: 'copy',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'csv',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'excel',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'pdf',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'print',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        'colvis'
+      ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
     $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
+      paging: true,
+      lengthChange: false,
+      searching: false,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
     });
   });
 </script>
+
   @endsection
 
 

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class TeacherAuthenticate
+class StudentRedirect
 {
     /**
      * Handle an incoming request.
@@ -16,8 +16,8 @@ class TeacherAuthenticate
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::guard('teacher')->check()) {
-            return redirect()->route('login');
+                if (Auth::guard('student')->check()) {
+            return redirect()->route('student.dashboard');
         }
         return $next($request);
     }

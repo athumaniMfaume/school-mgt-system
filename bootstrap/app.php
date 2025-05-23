@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin.auth' =>\App\Http\Middleware\AdminAuthenticate::class,
             'teacher.guest' =>\App\Http\Middleware\TeacherRedirect::class,
             'teacher.auth' =>\App\Http\Middleware\TeacherAuthenticate::class,
+            'student.guest' =>\App\Http\Middleware\StudentRedirect::class,
+            'student.auth' =>\App\Http\Middleware\StudentAuthenticate::class,
             
         ]
 
@@ -30,8 +32,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
 
         $middleware->redirectTo(
-            guests :'/student/login',
-            users :'/student/dashboard',
+            'login'
+           
 
         );
     })

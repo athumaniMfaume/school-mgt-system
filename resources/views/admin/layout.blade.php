@@ -69,6 +69,10 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="{{route('announcement.read')}}" class="nav-link">Announcement</a>
       </li>
+
+            <li class="nav-item d-none d-sm-inline-block">
+        <a href="{{route('profile')}}" class="nav-link">Profile</a>
+      </li>
     </ul>
 
     <!-- Right navbar links -->
@@ -97,7 +101,7 @@
 
       
       <li class="nav-item">
-        <a class="nav-link"  href="{{route('admin.logout')}}" >
+        <a class="nav-link"  href="{{route('logout')}}" >
           logout
         </a>
       </li>
@@ -550,7 +554,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="{{route('admin.changePassword')}}" class="nav-link">
+            <a href="{{route('change.password')}}" class="nav-link">
               <i class="nav-icon fas fa-key"></i>
               <p>
                 Change Password
@@ -560,7 +564,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="{{route('admin.logout')}}" class="nav-link">
+            <a href="{{route('logout')}}" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt"></i>
               <p>
                 Logout

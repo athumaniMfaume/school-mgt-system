@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class TeacherController extends Controller
 {
@@ -95,32 +96,38 @@ class TeacherController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'class_id' => 'required',
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'dob' => 'required',
-            'phone' => 'required',
-            'password' => 'required',
-
-        ]);
-
-        $data = new User();
-        $data->class_id = $request->class_id;
-        $data->name = $request->name;
-        $data->email = $request->email;
-        $data->dob = $request->dob;
-        $data->phone = $request->phone;
-        $data->role = 'teacher';
-        $data->password = Hash::make($request->password);
+public function store(Request $request)
+{
+$request->validate([
+    'class_id' => 'required',
+    'name' => 'required|string|max:255',
+    'email' => 'required|email|unique:users,email',
+    'dob' => ['required', 'date', 'before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
+    'phone' => ['required', 'regex:/^(?:\+255|0)(7|6|5|4|2)\d{8}$/'], // Tanzanian phone validation
+    'password' => 'required|string',
+    'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+]);
 
 
-        $data->save();
+    $data = new User();
+    $data->class_id = $request->class_id;
+    $data->name = $request->name;
+    $data->email = $request->email;
+    $data->dob = $request->dob;
+    $data->phone = $request->phone;
+    $data->role = 'teacher';
+    $data->password = Hash::make($request->password);
 
-        return redirect()->route('teacher.create')->with('success', 'Teacher Added Successfully!');
+    // Handle image upload
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('teachers', 'public');
+        $data->image = $imagePath;
     }
+
+    $data->save();
+
+    return redirect()->route('teacher.create')->with('success', 'Teacher Added Successfully!');
+}
 
     public function read()
     {
@@ -151,42 +158,71 @@ class TeacherController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
-    {
-        $request->validate([
-            'class_id' => 'sometimes',
-            'name' => 'sometimes',
-            'dob' => 'sometimes',
-            'phone' => 'sometimes',
-            'email' => 'sometimes',
-            'password' => 'sometimes',
+public function update(Request $request)
+{
+    $request->validate([
+        'class_id' => 'sometimes|required',
+        'name' => 'sometimes|string|max:255',
+        'email' => ['sometimes', 'email', 'unique:users,email,' . $request->id],
+        'dob' => ['sometimes', 'date', 'before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
+        'phone' => ['sometimes', 'required', 'regex:/^(?:\+255|0)(7|6|5|4|2)\d{8}$/'],
+        'password' => 'nullable|string',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        ]);
+    $data = User::findOrFail($request->id);
 
-        $data = User::find($request->id);
-        
+    if ($request->has('class_id')) {
         $data->class_id = $request->class_id;
-        $data->name = $request->name;
-        $data->email = $request->email;
-        $data->dob = $request->dob;
-        $data->phone = $request->phone;
-        $data->password = Hash::make($request->password);
-
-        $data->update();
-
-        return redirect()->route('teacher.read')->with('success', 'Teacher Updated Successfully!');
-
     }
+    if ($request->has('name')) {
+        $data->name = $request->name;
+    }
+    if ($request->has('email')) {
+        $data->email = $request->email;
+    }
+    if ($request->has('dob')) {
+        $data->dob = $request->dob;
+    }
+    if ($request->has('phone')) {
+        $data->phone = $request->phone;
+    }
+    if ($request->filled('password')) {
+        $data->password = Hash::make($request->password);
+    }
+
+    // Handle image update
+    if ($request->hasFile('image')) {
+        // Delete old image if exists
+        if ($data->image && \Storage::disk('public')->exists($data->image)) {
+            \Storage::disk('public')->delete($data->image);
+        }
+        // Store new image
+        $imagePath = $request->file('image')->store('teachers', 'public');
+        $data->image = $imagePath;
+    }
+
+    $data->save();
+
+    return redirect()->route('teacher.read')->with('success', 'Teacher Updated Successfully!');
+}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function delete($id)
-    {
-        $data = User::findOrFail($id);
-        $data->delete();
-        return redirect()->route('teacher.read')->with('success', 'Teacher Deleted Successfully!');
+public function delete($id)
+{
+    $data = User::findOrFail($id);
+
+    // Delete image file if exists
+    if ($data->image && Storage::disk('public')->exists($data->image)) {
+        Storage::disk('public')->delete($data->image);
     }
+
+    $data->delete();
+
+    return redirect()->route('teacher.read')->with('success', 'Teacher Deleted Successfully!');
+}
 
     public function login()
     {

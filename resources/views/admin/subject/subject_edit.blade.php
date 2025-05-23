@@ -56,42 +56,41 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{route('subject.update')}}" method="post">
-                @csrf
-                <input type="hidden" name="id" value="{{$data->id}}">
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Name</label>
-                    <input type="text" name="name" value="{{$data->name}}"  class="form-control" id="exampleInputEmail1" placeholder="Enter academic year">
-                    @error('name')
-                    <p class="text-danger">
-                      {{$message}}
-                    </p>
-                @enderror
-                </div>
+              <form action="{{ route('subject.update', $data->id) }}" method="POST">
+    @csrf
+    
+    <input type="hidden" name="id" value="{{ $data->id }}">
+
+    <div class="card-body">
+        <div class="form-group">
+            <label for="subjectName">Subject Name</label>
+            <input type="text" name="name" value="{{ old('name', $data->name) }}" class="form-control" id="subjectName" placeholder="Enter subject name">
+            @error('name')
+                <p class="text-danger">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="subjectType">Type</label>
+            <select name="type" class="form-control" id="subjectType">
+                <option value="theory" {{ $data->type === 'theory' ? 'selected' : '' }}>Theory</option>
+                <option value="practical" {{ $data->type === 'practical' ? 'selected' : '' }}>Practical</option>
+            </select>
+            @error('type')
+                <p class="text-danger">{{ $message }}</p>
+            @enderror
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>
 
 
-                  <div class="form-group">
-                    <label for="academicYear">Type</label>
-                    <select name="type" id="" class="form-control">
-                        <option value="{{$data->type}}" >{{$data->type}}</option>
-                        <option value="theory">Theory</option>
-                        <option value="practical">Practical</option>
-                    </select>
-                    @error('type')
-                        <p class="text-danger">{{ $message }}</p>
-                    @enderror
-                </div>
 
-
-
-                </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-              </form>
+                  
+               
             </div>
             <!-- /.card -->
 

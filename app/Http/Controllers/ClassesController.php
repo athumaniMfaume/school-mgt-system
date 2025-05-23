@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classes;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ClassesController extends Controller
 {
@@ -22,7 +23,7 @@ class ClassesController extends Controller
     public function read()
     {
         $data = Classes::get();
-        return view('admin.class.class_list',compact('data'));
+        return view('admin.class.class_list', compact('data'));
     }
 
     /**
@@ -31,21 +32,14 @@ class ClassesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required|string|max:255|unique:classes,name',
         ]);
 
         $data = new Classes();
         $data->name = $request->name;
         $data->save();
-        return redirect()->route('class.create')->with('success', 'Class Added Successfully!');
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Classes $classes)
-    {
-        //
+        return redirect()->route('class.create')->with('success', 'Class Added Successfully!');
     }
 
     /**
@@ -54,7 +48,7 @@ class ClassesController extends Controller
     public function edit(Request $request, $id)
     {
         $data = Classes::find($id);
-        return view('admin.class.class_edit',compact('data'));
+        return view('admin.class.class_edit', compact('data'));
     }
 
     /**
@@ -63,13 +57,20 @@ class ClassesController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name'=>'required'
+            'id' => 'required|exists:classes,id',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('classes', 'name')->ignore($request->id),
+            ],
         ]);
+
         $data = Classes::find($request->id);
         $data->name = $request->name;
         $data->update();
-        return redirect()->route('class.read')->with('success', 'Class Updated Successfully!');
 
+        return redirect()->route('class.read')->with('success', 'Class Updated Successfully!');
     }
 
     /**
@@ -79,7 +80,7 @@ class ClassesController extends Controller
     {
         $data = Classes::find($id);
         $data->delete();
-        return redirect()->route('class.read')->with('success', 'Class Deleted Successfully!');
 
+        return redirect()->route('class.read')->with('success', 'Class Deleted Successfully!');
     }
 }

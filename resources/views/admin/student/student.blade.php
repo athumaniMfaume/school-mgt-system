@@ -56,106 +56,116 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{ route('student.store') }}" method="post">
-                @csrf
-                <div class="card-body">
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <label for="academic_year">Academic Year</label>
-                            <select class="form-control" name="academic_year_id" id="academic_year">
-                                <option value="">Select academic year</option>
-                                @foreach ($academic as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('academic_year_id')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+         <form action="{{ route('student.store') }}" method="post" enctype="multipart/form-data">
+    @csrf
+    <div class="card-body">
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="academic_year">Academic Year</label>
+                <select class="form-control" name="academic_year_id" id="academic_year">
+                    <option value="">Select academic year</option>
+                    @foreach ($academic as $item)
+                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    @endforeach
+                </select>
+                @error('academic_year_id')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="class">Class</label>
-                            <select class="form-control" name="class_id" id="class">
-                                <option value="">Select class</option>
-                                @foreach ($class as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('class_id')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <div class="form-group col-md-4">
+                <label for="class">Class</label>
+                <select class="form-control" name="class_id" id="class">
+                    <option value="">Select class</option>
+                    @foreach ($class as $item)
+                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    @endforeach
+                </select>
+                @error('class_id')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="name">Student's Name</label>
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Enter Name">
-                            @error('name')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <div class="form-group col-md-4">
+                <label for="name">Student's Name</label>
+                <input type="text" name="name" class="form-control" id="name" placeholder="Enter Name">
+                @error('name')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="father_name">Father's Name</label>
-                            <input type="text" name="father_name" class="form-control" id="father_name" placeholder="Enter Father Name">
-                            @error('father_name')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <div class="form-group col-md-4">
+                <label for="father_name">Father's Name</label>
+                <input type="text" name="father_name" class="form-control" id="father_name" placeholder="Enter Father Name">
+                @error('father_name')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="mother_name">Mother's Name</label>
-                            <input type="text" name="mother_name" class="form-control" id="mother_name" placeholder="Enter Mother Name">
-                            @error('mother_name')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <div class="form-group col-md-4">
+                <label for="mother_name">Mother's Name</label>
+                <input type="text" name="mother_name" class="form-control" id="mother_name" placeholder="Enter Mother Name">
+                @error('mother_name')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="email">Student's Email</label>
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Enter Email">
-                            @error('email')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <div class="form-group col-md-4">
+                <label for="email">Student's Email</label>
+                <input type="email" name="email" class="form-control" id="email" placeholder="Enter Email">
+                @error('email')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="dob">Birthday</label>
-                            <input type="date" name="dob" class="form-control" id="dob">
-                            @error('dob')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <div class="form-group col-md-4">
+                <label for="dob">Birthday</label>
+                <input type="date" name="dob" class="form-control" id="dob">
+                @error('dob')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="admission_date">Admission Date</label>
-                            <input type="date" name="admission_date" class="form-control" id="admission_date">
-                            @error('admission_date')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <div class="form-group col-md-4">
+                <label for="admission_date">Admission Date</label>
+                <input type="date" name="admission_date" class="form-control" id="admission_date">
+                @error('admission_date')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="phone">Student's Phone</label>
-                            <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter Phone">
-                            @error('phone')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+            <div class="form-group col-md-4">
+                <label for="phone">Student's Phone</label>
+                <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter Phone">
+                @error('phone')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Enter Password">
-                            @error('password')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
+            <div class="form-group col-md-4">
+                <label for="password">Password</label>
+                <input type="password" name="password" class="form-control" id="password" placeholder="Enter Password">
+                @error('password')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="image">Student Image</label>
+                <input type="file" name="image" class="form-control" id="image" accept="image/*">
+                @error('image')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+        </div>
+    </div>
+
+    <!-- /.card-body -->
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
 
             </div>
             <!-- /.card -->

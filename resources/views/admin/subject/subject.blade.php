@@ -60,36 +60,40 @@
 
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{ route('subject.store') }}" method="post">
-                @csrf
-                <div class="card-body">
+           <form action="{{ route('subject.store') }}" method="POST">
+    @csrf
+    <div class="card-body">
 
-                    <div class="form-group">
-                        <label for="academicYear">Name</label>
-                        <input type="text" name="name" class="form-control">
-                        @error('name')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
+        <div class="form-group">
+            <label for="name">Subject Name</label>
+            <input type="text" name="name" class="form-control" value="{{ old('name') }}" placeholder="Enter subject name">
+            @error('name')
+                <p class="text-danger">{{ $message }}</p>
+            @enderror
+        </div>
 
-                    <div class="form-group">
-                        <label for="academicYear">Type</label>
-                        <select name="type" id="" class="form-control">
-                            <option value="" disabled selected>Select Subject</option>
-                            <option value="theory">Theory</option>
-                            <option value="practical">Practical</option>
-                        </select>
-                        @error('type')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <!-- /.card-body -->
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select name="type" class="form-control">
+                <option value="" disabled {{ old('type') ? '' : 'selected' }}>Select Type</option>
+                <option value="theory" {{ old('type') == 'theory' ? 'selected' : '' }}>Theory</option>
+                <option value="practical" {{ old('type') == 'practical' ? 'selected' : '' }}>Practical</option>
+            </select>
+            @error('type')
+                <p class="text-danger">{{ $message }}</p>
+            @enderror
+        </div>
 
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
+    </div>
+    <!-- /.card-body -->
+
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+             
+                      
 
             </div>
             <!-- /.card -->

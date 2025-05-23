@@ -57,62 +57,71 @@
             @endif
               <div class="card-header">
 
-                <form action="{{ route('subject.read') }}" method="GET">
-                    <div class="form-group col-md-4">
-                        <label for="exampleInputEmail1">Subject</label>
-                        <select class="form-control" name="name" id="">
-                          <option value="" disabled selected>Select Subject</option>
-                          @foreach ($subject as $item)
-                          <option value="{{$item->name}}">{{$item->name}}</option>
+               <form action="{{ route('subject.read') }}" method="GET" class="form-row align-items-end">
+    <div class="form-group col-md-4">
+        <label for="subject-name">Subject</label>
+        <select class="form-control" name="name" id="subject-name">
+            <option value="" selected>— All Subjects —</option>
+            @foreach ($subjects->keys() as $subjectName)
+                <option value="{{ $subjectName }}"
+                    {{ request('name') === $subjectName ? 'selected' : '' }}>
+                    {{ $subjectName }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
-                          @endforeach
-                        </select>
-                        @error('name')
-                        <p class="text-danger">
-                          {{$message}}
-                        </p>
-                    @enderror
-                      </div>
-
-                      <div class="form-group col-md-4">
-                        <button type="submit" class="btn btn-success">Filter Data</button>
-                      </div>
-
-                    </form><hr>
+    <div class="form-group col-md-4">
+        <button type="submit" class="btn btn-success">Filter</button>
+        <a href="{{ route('subject.read') }}" class="btn btn-secondary ml-2">Reset</a>
+    </div>
+</form>
+<hr>
 
                     <a href="{{route('subject.create')}}" class="btn btn-primary"> Add Subject</a>
 
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>SN</th>
-                    <th>Subject</th>
-                    <th>Type</th>
-                    <th>Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($data as $item)
-                        <tr>
-                            <td>{{$item->id}}</td>
-                            <td>{{$item->name}}</td>
-                            <td>{{$item->type}}</td>
-                            <td>
-                              
-                                <a href="{{route('subject.edit',$item->id)}}" class="badge badge-warning">edit</a>
-                                <a href="{{route('subject.delete',$item->id)}}" onclick="return confirm('are you sure want to delete?')"
-                                     class="badge badge-danger">delete</a>
-                            </td>
-                        </tr>
-                    @endforeach
+               <table class="table">
+  <thead>
+    <tr>
+      <th>S/N</th>
+      <th>Subject</th>
+      <th>Type</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach($subjects as $name => $group)
+      <tr>
+        <td>{{ $loop->iteration }}</td>
+        <td>{{ $name }}</td>
+        <td>
+          {{-- take the “type” column from each model, unique them, then join with “|” --}}
+          {{ $group->pluck('type')->unique()->implode(' | ') }}
+        </td>
+        <td>
+          {{-- if you need per‐type actions, loop again inside --}}
+          @foreach($group as $subject)
+            <a href="{{ route('subject.edit', $subject->id) }}"
+               class="btn btn-sm btn-warning">Edit {{ $subject->type }}</a>
+          @endforeach
+          {{-- or a single delete that wipes both types: --}}
+          <form action="{{ route('subject.delete', $group->first()->id) }}"
+                method="POST" class="d-inline">
+            @csrf @method('DELETE')
+            <button class="btn btn-sm btn-danger"
+                    onclick="return confirm('Delete all types for {{ $name }}?')">
+              Delete
+            </button>
+          </form>
+        </td>
+      </tr>
+    @endforeach
+  </tbody>
+</table>
 
-
-                  </tbody>
-
-                </table>
               </div>
               <!-- /.card-body -->
             </div>
@@ -147,20 +156,57 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      responsive: true,
+      lengthChange: false,
+      autoWidth: false,
+      buttons: [
+        {
+          extend: 'copy',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'csv',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'excel',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'pdf',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'print',
+          exportOptions: {
+            columns: ':not(:last-child)' // Exclude "Actions"
+          }
+        },
+        'colvis'
+      ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
     $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
+      paging: true,
+      lengthChange: false,
+      searching: false,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
     });
   });
 </script>
+
+
   @endsection
 
 

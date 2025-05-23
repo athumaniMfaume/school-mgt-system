@@ -49,32 +49,31 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>SN</th>
-                    <th>Subject</th>
-                    <th>Theory/Practical</th>
-                    <th>Teacher</th>
+               <table id="example1" class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>SN</th>
+      <th>Subject</th>
+      <th>Theory/Practical</th>
+      <th>Teacher</th>
+    </tr>
+  </thead>
+  <tbody>
+    @forelse ($data as $key => $item)
+      <tr>
+        <td>{{ $key + 1 }}</td>
+        <td>{{ $item->subject->name ?? 'N/A' }}</td>
+        <td>{{ $item->subject->type ?? 'N/A' }}</td>
+        <td>{{ $item->user->name ?? 'N/A' }}</td>
+      </tr>
+    @empty
+      <tr>
+        <td colspan="4" class="text-center">No subjects assigned yet.</td>
+      </tr>
+    @endforelse
+  </tbody>
+</table>
 
-                  </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($data as $item)
-                        <tr>
-                            <td>{{$item->id}}</td>
-                            <td>{{$item->subject->name}}</td>
-                            <td>{{$item->subject->type}}</td>
-                            <td>{{$item->user->name}}</td>
-
-
-                        </tr>
-                    @endforeach
-
-
-                  </tbody>
-
-                </table>
               </div>
               <!-- /.card-body -->
             </div>
@@ -109,20 +108,36 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      responsive: true,
+      lengthChange: false,
+      autoWidth: false,
+      buttons: [
+        'copy',
+        'csv',
+        'excel',
+        'pdf',
+        'print',
+        'colvis'
+      ]
+    })
+    .buttons()
+    .container()
+    .appendTo('#example1_wrapper .col-md-6:eq(0)');
+
     $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
+      paging: true,
+      lengthChange: false,
+      searching: false,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
     });
   });
 </script>
+
+
+
   @endsection
 
 

@@ -62,7 +62,7 @@
                 <div class="card-body">
                   <div class="form-group">
                     <label for="exampleInputEmail1">Message</label>
-                    <input type="text" name="message" value="{{$data->message}}"  class="form-control" id="exampleInputEmail1" placeholder="Enter academic year">
+                    <input type="text" name="message" value="{{$data->message}}"  class="form-control" id="exampleInputEmail1" >
                     @error('message')
                     <p class="text-danger">
                       {{$message}}

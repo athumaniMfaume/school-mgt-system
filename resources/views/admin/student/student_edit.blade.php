@@ -56,150 +56,142 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{route('student.update')}}" method="post">
-                @csrf
+             <form action="{{ route('student.update') }}" method="post" enctype="multipart/form-data">
+    @csrf
 
-                <div class="card-body">
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <input type="hidden" name="id" value="{{ $data->id }}">
-                            <label for="exampleInputEmail1">Academic Year</label>
-                            <select class="form-control" name="academic_year_id" id="">
-                                <option value="">Select class</option>
-                                @foreach ($academic as $item)
-                                    <option value="{{ $item->id }}"
-                                        @if ($data->academic_year_id == $item->id) selected @endif>
-                                        {{ $item->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('academic_year_id')
-                          <p class="text-danger">
-                            {{$message}}
-                          </p>
-                      @enderror
-                        </div>
+    <input type="hidden" name="id" value="{{ $data->id }}">
 
+    <div class="card-body">
+        <div class="row">
 
-                      <div class="form-group col-md-4">
-                        <label for="exampleInputEmail1">Class</label>
-                        <select class="form-control" name="class_id" id="">
-                            <option value="">Select class</option>
-                            @foreach ($class as $item)
-                                <option value="{{ $item->id }}"
-                                    @if ($data->class_id == $item->id) selected @endif>
-                                    {{ $item->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('class_id')
-                          <p class="text-danger">
-                            {{$message}}
-                          </p>
-                      @enderror
+            <!-- Academic Year -->
+            <div class="form-group col-md-4">
+                <label for="academic_year_id">Academic Year</label>
+                <select class="form-control" name="academic_year_id" id="academic_year_id">
+                    <option value="">Select academic year</option>
+                    @foreach ($academic as $item)
+                        <option value="{{ $item->id }}" {{ (old('academic_year_id', $data->academic_year_id) == $item->id) ? 'selected' : '' }}>
+                            {{ $item->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('academic_year_id')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Class -->
+            <div class="form-group col-md-4">
+                <label for="class_id">Class</label>
+                <select class="form-control" name="class_id" id="class_id">
+                    <option value="">Select class</option>
+                    @foreach ($class as $item)
+                        <option value="{{ $item->id }}" {{ (old('class_id', $data->class_id) == $item->id) ? 'selected' : '' }}>
+                            {{ $item->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('class_id')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Student's Name -->
+            <div class="form-group col-md-4">
+                <label for="name">Student's Name</label>
+                <input type="text" name="name" id="name" value="{{ old('name', $data->name) }}" class="form-control">
+                @error('name')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Student's Phone -->
+            <div class="form-group col-md-4">
+                <label for="phone">Student's Phone</label>
+                <input type="text" name="phone" id="phone" value="{{ old('phone', $data->phone) }}" class="form-control">
+                @error('phone')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Student's Email -->
+            <div class="form-group col-md-4">
+                <label for="email">Student's Email</label>
+                <input type="email" name="email" id="email" value="{{ old('email', $data->email) }}" class="form-control">
+                @error('email')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Student's Password -->
+            <div class="form-group col-md-4">
+                <label for="password">Student's Password</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Enter new password if you want to change">
+                @error('password')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Admission Date -->
+            <div class="form-group col-md-4">
+                <label for="admission_date">Admission Date</label>
+                <input type="date" name="admission_date" id="admission_date" value="{{ old('admission_date', $data->admission_date) }}" class="form-control">
+                @error('admission_date')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Birthday -->
+            <div class="form-group col-md-4">
+                <label for="dob">Birthday</label>
+                <input type="date" name="dob" id="dob" value="{{ old('dob', $data->dob) }}" class="form-control">
+                @error('dob')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Father's Name -->
+            <div class="form-group col-md-4">
+                <label for="father_name">Student's Father Name</label>
+                <input type="text" name="father_name" id="father_name" value="{{ old('father_name', $data->father_name) }}" class="form-control">
+                @error('father_name')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Mother's Name -->
+            <div class="form-group col-md-4">
+                <label for="mother_name">Student's Mother Name</label>
+                <input type="text" name="mother_name" id="mother_name" value="{{ old('mother_name', $data->mother_name) }}" class="form-control">
+                @error('mother_name')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Current Image Preview -->
+            <div class="form-group col-md-4">
+                <label for="image">Student's Image</label>
+                <input type="file" name="image" id="image" class="form-control">
+                @error('image')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+
+                @if ($data->image)
+                    <div class="mt-2">
+                        <img src="{{ asset('storage/' . $data->image) }}" alt="Current Image" width="100" height="100" style="object-fit: cover; border-radius: 5px;">
                     </div>
+                @endif
+            </div>
 
+        </div>
+    </div>
 
+    <!-- /.card-body -->
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
 
-
-
-
-
-
-
-                  <div class="form-group col-md-4">
-                    <label for="exampleInputEmail1">Student's Name</label>
-                    <input type="text" name="name" value="{{$data->name}}"  class="form-control" id="exampleInputEmail1" >
-                    @error('name')
-                    <p class="text-danger">
-                      {{$message}}
-                    </p>
-                @enderror
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label for="exampleInputEmail1">Student's Phone</label>
-                    <input type="text" name="phone" value="{{$data->phone}}"  class="form-control" id="exampleInputEmail1" >
-                    @error('phone')
-                    <p class="text-danger">
-                      {{$message}}
-                    </p>
-                @enderror
-                </div>
-
-
-                <div class="form-group col-md-4">
-                    <label for="exampleInputEmail1">Student's Email</label>
-                    <input type="email" name="email" value="{{$data->email}}"  class="form-control" id="exampleInputEmail1" >
-                    @error('email')
-                    <p class="text-danger">
-                      {{$message}}
-                    </p>
-                @enderror
-                </div>
-
-                  <div class="form-group col-md-4">
-                    <label for="exampleInputEmail1">Student's Password</label>
-                    <input type="password" name="password" value="{{$data->password}}"  class="form-control" id="exampleInputEmail1" >
-                    @error('password')
-                    <p class="text-danger">
-                      {{$message}}
-                    </p>
-                @enderror
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label for="exampleInputEmail1">Admission Date</label>
-                    <input type="date" name="admission_date" value="{{$data->admission_date}}"  class="form-control" id="exampleInputEmail1" >
-                    @error('admission_date')
-                    <p class="text-danger">
-                      {{$message}}
-                    </p>
-                @enderror
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label for="exampleInputEmail1">Birthday</label>
-                    <input type="date" name="dob" value="{{$data->dob}}"  class="form-control" id="exampleInputEmail1" >
-                    @error('dob')
-                    <p class="text-danger">
-                      {{$message}}
-                    </p>
-                @enderror
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label for="exampleInputEmail1">Student's Father Name</label>
-                    <input type="text" name="father_name" value="{{$data->father_name}}"  class="form-control" id="exampleInputEmail1" >
-                    @error('father_name')
-                    <p class="text-danger">
-                      {{$message}}
-                    </p>
-                @enderror
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label for="exampleInputEmail1">Student's Mother Name</label>
-                    <input type="text" name="mother_name" value="{{$data->mother_name}}"  class="form-control" id="exampleInputEmail1" >
-                    @error('mother_name')
-                    <p class="text-danger">
-                      {{$message}}
-                    </p>
-                @enderror
-                </div>
-
-
-
-
-                </div>
-
-                </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-              </form>
             </div>
             <!-- /.card -->
 

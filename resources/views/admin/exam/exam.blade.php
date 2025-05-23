@@ -53,7 +53,7 @@
             </div>
             @endif
               <div class="card-header">
-                <h3 class="card-title">Assign Subject Class</h3>
+                <h3 class="card-title">Add Exam</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
